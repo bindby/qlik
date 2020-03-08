@@ -52,17 +52,19 @@ bool AbstractSolver::solveWithBacktrack(bool checkUnique) {
         while(sudoku.getLock(currentColumn, currentRow) && currentDirection != Halt) {
             step();
         }
-        sudoku.setValue(currentColumn, currentRow, 0);
-        currentDirection = Back;
-        step();
+        if (currentDirection != Halt) {
+            sudoku.setValue(currentColumn, currentRow, 0);
+            currentDirection = Back;
+            step();
 
-        while(currentDirection!=Halt) {
-            onset();
-            if (currentDirection != Halt) {
-                step();
+            while(currentDirection!=Halt) {
+                onset();
+                if (currentDirection != Halt) {
+                    step();
+                }
             }
+            unique = !evaluator.isSolved();
         }
-        unique = !evaluator.isSolved();
     }
 
     return solved && unique;
